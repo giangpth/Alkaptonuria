@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1960px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ad494a", "id": "@GENE_HPD", "label": "@GENE_HPD", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Tyrosine", "label": "@CHEMICAL_Tyrosine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Carbon_Dioxide", "label": "@CHEMICAL_Carbon_Dioxide", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_nitisinone", "label": "@CHEMICAL_nitisinone", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Homogentisic_Acid", "label": "@CHEMICAL_Homogentisic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Histidine", "label": "@CHEMICAL_Histidine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Phenol", "label": "@CHEMICAL_Phenol", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Hydrogen_Peroxide", "label": "@CHEMICAL_Hydrogen_Peroxide", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Dopamine", "label": "@CHEMICAL_Dopamine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Phenylalanine", "label": "@CHEMICAL_Phenylalanine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_sapropterin", "label": "@CHEMICAL_sapropterin", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Leucine", "label": "@CHEMICAL_Leucine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Asparagine", "label": "@CHEMICAL_Asparagine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_PAH", "label": "@GENE_PAH", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Ascorbic_Acid", "label": "@CHEMICAL_Ascorbic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_GSTZ1", "label": "@GENE_GSTZ1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_FAH", "label": "@GENE_FAH", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Sulfur", "label": "@CHEMICAL_Sulfur", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@GENE_CDH5", "label": "@GENE_CDH5", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_GSK3B", "label": "@GENE_GSK3B", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Orotic_Acid", "label": "@CHEMICAL_Orotic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Uric_Acid", "label": "@CHEMICAL_Uric_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_MC1R", "label": "@GENE_MC1R", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_MC2R", "label": "@GENE_MC2R", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_MC5R", "label": "@GENE_MC5R", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_POMC", "label": "@GENE_POMC", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_TCF7L2", "label": "@GENE_TCF7L2", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_APC", "label": "@GENE_APC", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "id": "@GENE_CTNNB1", "label": "@GENE_CTNNB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_DKK1", "label": "@GENE_DKK1", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_LEF1", "label": "@GENE_LEF1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_TCF4", "label": "@GENE_TCF4", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_CTNNA1", "label": "@GENE_CTNNA1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_AXIN1", "label": "@GENE_AXIN1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_CDH2", "label": "@GENE_CDH2", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@@CHEMICAL_Hydroquinones", "label": "@@CHEMICAL_Hydroquinones", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Taurine", "label": "@CHEMICAL_Taurine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Creatinine", "label": "@CHEMICAL_Creatinine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_GAA", "label": "@GENE_GAA", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Glycogen", "label": "@CHEMICAL_Glycogen", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_SI", "label": "@GENE_SI", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_PTCH1", "label": "@GENE_PTCH1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_SMO", "label": "@GENE_SMO", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_GLI1", "label": "@GENE_GLI1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_SUFU", "label": "@GENE_SUFU", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "id": "@GENE_TNFRSF11B", "label": "@GENE_TNFRSF11B", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Methotrexate", "label": "@CHEMICAL_Methotrexate", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_Zoledronic_Acid", "label": "@CHEMICAL_Zoledronic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_TNFSF11", "label": "@GENE_TNFSF11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_quinone", "label": "@CHEMICAL_quinone", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}]);
+                  edges = new vis.DataSet([{"color": "green", "from": "@GENE_HPD", "title": "PMIDs: [\u002726947423\u0027, \u002740491422\u0027, \u002730684868\u0027, \u002716197918\u0027, \u002725182962\u0027, \u002731578365\u0027]", "to": "@CHEMICAL_Tyrosine", "width": 2}, {"color": "blue", "from": "@GENE_HPD", "to": "@CHEMICAL_Carbon_Dioxide", "width": 1}, {"color": "green", "from": "@GENE_HPD", "title": "PMIDs: [\u002726947423\u0027, \u002724952314\u0027, \u002734485014\u0027, \u002740243989\u0027, \u002725628464\u0027, \u002739121793\u0027, \u002736980965\u0027, \u002731578365\u0027, \u002715931605\u0027]", "to": "@CHEMICAL_nitisinone", "width": 2}, {"color": "green", "from": "@GENE_HPD", "title": "PMIDs: [\u002716197918\u0027, \u002731578365\u0027, \u002734404820\u0027, \u002725182962\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Histidine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Phenol", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Hydrogen_Peroxide", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Carbon_Dioxide", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_sapropterin", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Leucine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Asparagine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@GENE_PAH", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_Ascorbic_Acid", "width": 1}, {"color": "green", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002727943071\u0027, \u002735822095\u0027, \u002722100375\u0027, \u002737443717\u0027, \u002733920006\u0027, \u002736555443\u0027, \u002720694448\u0027, \u002721104647\u0027, \u00277753441\u0027, \u00278782815\u0027, \u002716197918\u0027, \u002727590860\u0027, \u002723105706\u0027, \u002726474772\u0027, \u002735444851\u0027, \u002719247659\u0027, \u002724952314\u0027, \u002737175552\u0027, \u002732305737\u0027, \u002738996180\u0027, \u002723430917\u0027, \u00279734339\u0027, \u002725681086\u0027, \u002732395409\u0027, \u002719862842\u0027, \u002725665838\u0027, \u00278188247\u0027, \u00272771520\u0027, \u002732284865\u0027, \u002725182962\u0027, \u002731578365\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002729147990\u0027, \u002731503358\u0027, \u002735944460\u0027, \u002730049652\u0027, \u002725772318\u0027, \u002728081634\u0027, \u002739203858\u0027, \u002732083330\u0027, \u002735736410\u0027, \u002726947423\u0027, \u002728879639\u0027, \u002725680927\u0027, \u002735680516\u0027, \u002731296884\u0027, \u002724952314\u0027, \u002736295821\u0027, \u002734485014\u0027, \u002736005644\u0027, \u002730782595\u0027, \u002729754208\u0027, \u002721620748\u0027, \u002734344451\u0027, \u002736966367\u0027, \u002731037385\u0027, \u002738487984\u0027, \u002737404676\u0027, \u002725665838\u0027, \u002740138457\u0027, \u002739290064\u0027, \u002735242577\u0027, \u002736167967\u0027]", "to": "@CHEMICAL_nitisinone", "width": 2}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002711327815\u0027, \u002735562974\u0027]", "to": "@GENE_GSTZ1", "width": 2}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002733365210\u0027, \u002710518553\u0027, \u002738974614\u0027, \u002736980965\u0027, \u002738256395\u0027, \u002733670179\u0027]", "to": "@GENE_FAH", "width": 2}, {"color": "blue", "from": "@CHEMICAL_Sulfur", "to": "@CHEMICAL_Hydrogen_Peroxide", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Sulfur", "to": "@CHEMICAL_Carbon_Dioxide", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@GENE_CDH5", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Carbon_Dioxide", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@GENE_GSK3B", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Ascorbic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Orotic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Hydrogen_Peroxide", "to": "@CHEMICAL_Uric_Acid", "width": 1}, {"color": "blue", "from": "@GENE_MC1R", "to": "@GENE_MC2R", "width": 1}, {"color": "blue", "from": "@GENE_MC1R", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "blue", "from": "@GENE_MC1R", "to": "@GENE_MC5R", "width": 1}, {"color": "blue", "from": "@GENE_MC1R", "to": "@GENE_POMC", "width": 1}, {"color": "blue", "from": "@GENE_MC2R", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "blue", "from": "@GENE_MC2R", "to": "@GENE_MC5R", "width": 1}, {"color": "green", "from": "@GENE_MC2R", "title": "PMIDs: [\u002736421695\u0027, \u002737314044\u0027]", "to": "@GENE_POMC", "width": 2}, {"color": "grey", "from": "@GENE_TCF7L2", "to": "@GENE_APC", "width": 1}, {"color": "grey", "from": "@GENE_TCF7L2", "to": "@GENE_CTNNB1", "width": 1}, {"color": "grey", "from": "@GENE_TCF7L2", "to": "@GENE_DKK1", "width": 1}, {"color": "grey", "from": "@GENE_TCF7L2", "to": "@GENE_LEF1", "width": 1}, {"color": "grey", "from": "@GENE_TCF7L2", "to": "@GENE_TCF4", "width": 1}, {"color": "grey", "from": "@GENE_APC", "to": "@GENE_CTNNB1", "width": 1}, {"color": "grey", "from": "@GENE_APC", "to": "@GENE_CTNNA1", "width": 1}, {"color": "grey", "from": "@GENE_APC", "to": "@GENE_GSK3B", "width": 1}, {"color": "grey", "from": "@GENE_APC", "to": "@GENE_LEF1", "width": 1}, {"color": "grey", "from": "@GENE_APC", "to": "@GENE_AXIN1", "width": 1}, {"color": "blue", "from": "@GENE_FAH", "to": "@GENE_GSTZ1", "width": 1}, {"color": "blue", "from": "@GENE_GSTZ1", "to": "@CHEMICAL_Homogentisic_Acid", "width": 1}, {"color": "grey", "from": "@GENE_CDH5", "to": "@GENE_CTNNB1", "width": 1}, {"color": "grey", "from": "@GENE_CDH5", "to": "@GENE_CDH2", "width": 1}, {"color": "grey", "from": "@GENE_CDH5", "to": "@GENE_CTNNA1", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_GSK3B", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_LEF1", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_CDH2", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_CTNNA1", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_AXIN1", "width": 1}, {"color": "grey", "from": "@GENE_CTNNB1", "to": "@GENE_TCF4", "width": 1}, {"color": "green", "from": "@GENE_CTNNB1", "title": "PMIDs: [\u002734884726\u0027, \u002730343446\u0027, \u002737655078\u0027, \u002735027825\u0027, \u002738740881\u0027]", "to": "@GENE_DKK1", "width": 2}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Ascorbic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Asparagine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Orotic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_sapropterin", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Leucine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Phenol", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Uric_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@@CHEMICAL_Hydroquinones", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Histidine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Taurine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Carbon_Dioxide", "to": "@CHEMICAL_Homogentisic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@CHEMICAL_Ascorbic_Acid", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@CHEMICAL_sapropterin", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@GENE_PAH", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@CHEMICAL_Creatinine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@GENE_POMC", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Dopamine", "to": "@GENE_MC5R", "width": 1}, {"color": "blue", "from": "@GENE_GAA", "to": "@CHEMICAL_Glycogen", "width": 1}, {"color": "blue", "from": "@GENE_GAA", "to": "@GENE_SI", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Ascorbic_Acid", "to": "@CHEMICAL_Taurine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Ascorbic_Acid", "to": "@CHEMICAL_sapropterin", "width": 1}, {"color": "red", "from": "@CHEMICAL_Ascorbic_Acid", "title": "PMIDs: [\u00273121448\u0027, \u002720648626\u0027, \u00272771520\u0027, \u00273180550\u0027, \u0027405402\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "blue", "from": "@CHEMICAL_Histidine", "to": "@CHEMICAL_Asparagine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Histidine", "to": "@CHEMICAL_Leucine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Histidine", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Asparagine", "to": "@CHEMICAL_Leucine", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Asparagine", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "green", "from": "@GENE_PTCH1", "title": "PMIDs: [\u002734562255\u0027, \u002735483421\u0027]", "to": "@GENE_SMO", "width": 2}, {"color": "blue", "from": "@GENE_PTCH1", "to": "@GENE_GLI1", "width": 1}, {"color": "grey", "from": "@GENE_SMO", "to": "@GENE_SUFU", "width": 1}, {"color": "green", "from": "@GENE_SMO", "title": "PMIDs: [\u002734562248\u0027, \u002734562255\u0027]", "to": "@GENE_GLI1", "width": 2}, {"color": "blue", "from": "@GENE_TNFRSF11B", "to": "@CHEMICAL_Methotrexate", "width": 1}, {"color": "blue", "from": "@GENE_TNFRSF11B", "to": "@CHEMICAL_Zoledronic_Acid", "width": 1}, {"color": "blue", "from": "@GENE_TNFRSF11B", "to": "@GENE_TNFSF11", "width": 1}, {"color": "grey", "from": "@GENE_CTNNA1", "to": "@GENE_AXIN1", "width": 1}, {"color": "grey", "from": "@GENE_CTNNA1", "to": "@GENE_CDH2", "width": 1}, {"color": "grey", "from": "@GENE_GSK3B", "to": "@GENE_GLI1", "width": 1}, {"color": "grey", "from": "@GENE_GSK3B", "to": "@GENE_AXIN1", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Leucine", "to": "@CHEMICAL_Phenylalanine", "width": 1}, {"color": "grey", "from": "@GENE_LEF1", "to": "@GENE_TCF4", "width": 1}, {"color": "grey", "from": "@GENE_SUFU", "to": "@GENE_GLI1", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Phenylalanine", "to": "@CHEMICAL_sapropterin", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Phenylalanine", "to": "@GENE_PAH", "width": 1}, {"color": "red", "from": "@CHEMICAL_Phenylalanine", "title": "PMIDs: [\u002731296884\u0027, \u002731503358\u0027, \u002735944460\u0027, \u002736005644\u0027, \u002735680516\u0027]", "to": "@CHEMICAL_nitisinone", "width": 2}, {"color": "red", "from": "@CHEMICAL_Phenylalanine", "title": "PMIDs: [\u00277673153\u0027, \u00277753441\u0027, \u002738996180\u0027, \u00278782815\u0027, \u00272771520\u0027, \u002736327861\u0027, \u002725681086\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "grey", "from": "@GENE_CDH2", "to": "@GENE_AXIN1", "width": 1}, {"color": "blue", "from": "@CHEMICAL_sapropterin", "to": "@GENE_PAH", "width": 1}, {"color": "blue", "from": "@GENE_MC5R", "to": "@GENE_POMC", "width": 1}, {"color": "red", "from": "@CHEMICAL_Uric_Acid", "title": "PMIDs: [\u002724373924\u0027, \u002710456213\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "red", "from": "@CHEMICAL_nitisinone", "title": "PMIDs: [\u002725475116\u0027, \u002736295829\u0027, \u002735822095\u0027, \u002731503358\u0027, \u002712501223\u0027, \u002725772318\u0027, \u002725628464\u0027, \u002734059444\u0027, \u002731228435\u0027, \u002728081634\u0027, \u002719765774\u0027, \u002725940034\u0027, \u002730055994\u0027, \u002732083330\u0027, \u002726947423\u0027, \u002728879639\u0027, \u002731392115\u0027, \u002735685462\u0027, \u002710083729\u0027, \u002735822094\u0027, \u002736045846\u0027, \u002732822600\u0027, \u002731296884\u0027, \u002724952314\u0027, \u002736295821\u0027, \u002734485014\u0027, \u002732904992\u0027, \u002736005644\u0027, \u002723430917\u0027, \u002723511227\u0027, \u002728942493\u0027, \u002739121793\u0027, \u002721620748\u0027, \u002715931605\u0027, \u002734344451\u0027, \u002729754208\u0027, \u002736966367\u0027, \u002738846518\u0027, \u002731037385\u0027, \u002738487984\u0027, \u002737404676\u0027, \u002725665838\u0027, \u002731235217\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "grey", "from": "@@CHEMICAL_Hydroquinones", "to": "@CHEMICAL_quinone", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

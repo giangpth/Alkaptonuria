@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1960px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ad494a", "id": "@GENE_HPD", "label": "@GENE_HPD", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Homogentisic_Acid", "label": "@CHEMICAL_Homogentisic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "label": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Tyrosine", "label": "@CHEMICAL_Tyrosine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@CHEMICAL_4_Maleylacetoacetate", "label": "@CHEMICAL_4_Maleylacetoacetate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "id": "@GENE_HGD", "label": "@GENE_HGD", "shape": "dot", "size": 15, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_TYR", "label": "@GENE_TYR", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@CHEMICAL_Metanephrine", "label": "@CHEMICAL_Metanephrine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "label": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_COMT", "label": "@GENE_COMT", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Epinephrine", "label": "@CHEMICAL_Epinephrine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_MAOA", "label": "@GENE_MAOA", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Normetanephrine", "label": "@CHEMICAL_Normetanephrine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Vanilmandelic_Acid", "label": "@CHEMICAL_Vanilmandelic_Acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@GENE_ALDH3A1", "label": "@GENE_ALDH3A1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_fumarylpyruvate", "label": "@CHEMICAL_fumarylpyruvate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "ko:K16165", "label": "ko:K16165", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Pyruvic_Acid", "label": "@CHEMICAL_Pyruvic_Acid", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Fumarates", "label": "@CHEMICAL_Fumarates", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_4_dihydroxymandelic_acid", "label": "@CHEMICAL_3_4_dihydroxymandelic_acid", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_dopegal", "label": "@CHEMICAL_dopegal", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Diiodotyrosine", "label": "@CHEMICAL_Diiodotyrosine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Triiodothyronine", "label": "@CHEMICAL_Triiodothyronine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_TPO", "label": "@GENE_TPO", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Thyroxine", "label": "@CHEMICAL_Thyroxine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_iodotyrosine", "label": "@CHEMICAL_3_iodotyrosine", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Levodopa", "label": "@CHEMICAL_Levodopa", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@CHEMICAL_dopaquinone", "label": "@CHEMICAL_dopaquinone", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_DDC", "label": "@GENE_DDC", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "id": "@GENE_TH", "label": "@GENE_TH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Dopamine", "label": "@CHEMICAL_Dopamine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "ko:K00422", "label": "ko:K00422", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_2_5_dihydroxybenzaldehyde", "label": "@CHEMICAL_2_5_dihydroxybenzaldehyde", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_AOX1", "label": "@GENE_AOX1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_2_5_dihydroxybenzoic_acid", "label": "@CHEMICAL_2_5_dihydroxybenzoic_acid", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@CHEMICAL_4_hydroxyphenylacetate", "label": "@CHEMICAL_4_hydroxyphenylacetate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "label": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "label": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "label": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "label": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "label": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Methoxyhydroxyphenylglycol", "label": "@CHEMICAL_Methoxyhydroxyphenylglycol", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "label": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Norepinephrine", "label": "@CHEMICAL_Norepinephrine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "#393b79", "id": "@CHEMICAL_3_methoxytyramine", "label": "@CHEMICAL_3_methoxytyramine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@GENE_ADH7", "label": "@GENE_ADH7", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_Tyramine", "label": "@CHEMICAL_Tyramine", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "ko:K00817", "label": "ko:K00817", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_IL4I1", "label": "@GENE_IL4I1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "ko:K22329", "label": "ko:K22329", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "id": "@GENE_GSTZ1", "label": "@GENE_GSTZ1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "id": "@GENE_FAH", "label": "@GENE_FAH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "ko:K25272", "label": "ko:K25272", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_Indole_5_6_quinone", "label": "@CHEMICAL_Indole_5_6_quinone", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_5_6_dihydroxyindole", "label": "@CHEMICAL_5_6_dihydroxyindole", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#393b79", "id": "@CHEMICAL_fumarylacetoacetate", "label": "@CHEMICAL_fumarylacetoacetate", "shape": "dot", "size": 10, "title": "Type: chemical", "type": "chemical"}, {"color": "grey", "id": "@CHEMICAL_acetoacetic_acid", "label": "@CHEMICAL_acetoacetic_acid", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_DCT", "label": "@GENE_DCT", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_dopachrome", "label": "@CHEMICAL_dopachrome", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_TYRP1", "label": "@GENE_TYRP1", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_5_6_dihydroxy_2_indolylcarboxylic_acid", "label": "@CHEMICAL_5_6_dihydroxy_2_indolylcarboxylic_acid", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_PNMT", "label": "@GENE_PNMT", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_MIF", "label": "@GENE_MIF", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@CHEMICAL_2_Hydroxy_3_4_hydroxyphenyl_propenoate", "label": "@CHEMICAL_2_Hydroxy_3_4_hydroxyphenyl_propenoate", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "grey", "id": "@GENE_DBH", "label": "@GENE_DBH", "shape": "diamond", "size": 10, "title": "Type: Unknown"}]);
+                  edges = new vis.DataSet([{"color": "green", "from": "@GENE_HPD", "title": "PMIDs: [\u002725182962\u0027, \u002731578365\u0027, \u002716197918\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "grey", "from": "@GENE_HPD", "to": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "width": 1}, {"color": "red", "from": "@GENE_HPD", "title": "PMIDs: [\u002726947423\u0027]", "to": "@CHEMICAL_Tyrosine", "width": 2}, {"color": "grey", "from": "@CHEMICAL_Homogentisic_Acid", "to": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Homogentisic_Acid", "to": "@CHEMICAL_4_Maleylacetoacetate", "width": 1}, {"color": "green", "from": "@CHEMICAL_Homogentisic_Acid", "title": "PMIDs: [\u002736118553\u0027, \u002739737503\u0027]", "to": "@GENE_HGD", "width": 2}, {"color": "red", "from": "@CHEMICAL_Homogentisic_Acid", "title": "PMIDs: [\u002725665838\u0027, \u002735444851\u0027]", "to": "@CHEMICAL_Tyrosine", "width": 2}, {"color": "red", "from": "@CHEMICAL_Homogentisic_Acid", "title": "PMIDs: [\u002727142149\u0027]", "to": "@GENE_TYR", "width": 2}, {"color": "grey", "from": "@CHEMICAL_Metanephrine", "to": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Metanephrine", "to": "@GENE_COMT", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Metanephrine", "to": "@CHEMICAL_Epinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Metanephrine", "to": "@GENE_MAOA", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "to": "@CHEMICAL_Normetanephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "to": "@CHEMICAL_Vanilmandelic_Acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "to": "@GENE_ALDH3A1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_Methoxy_4_hydroxyphenylglycolaldehyde", "to": "@GENE_MAOA", "width": 1}, {"color": "grey", "from": "@CHEMICAL_fumarylpyruvate", "to": "ko:K16165", "width": 1}, {"color": "grey", "from": "@CHEMICAL_fumarylpyruvate", "to": "@CHEMICAL_Pyruvic_Acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_fumarylpyruvate", "to": "@CHEMICAL_Fumarates", "width": 1}, {"color": "grey", "from": "ko:K16165", "to": "@CHEMICAL_Fumarates", "width": 1}, {"color": "grey", "from": "ko:K16165", "to": "@CHEMICAL_Pyruvic_Acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_dihydroxymandelic_acid", "to": "@CHEMICAL_Vanilmandelic_Acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_dihydroxymandelic_acid", "to": "@CHEMICAL_dopegal", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_dihydroxymandelic_acid", "to": "@GENE_ALDH3A1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_dihydroxymandelic_acid", "to": "@GENE_COMT", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Vanilmandelic_Acid", "to": "@GENE_COMT", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Vanilmandelic_Acid", "to": "@GENE_ALDH3A1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Diiodotyrosine", "to": "@CHEMICAL_Triiodothyronine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Diiodotyrosine", "to": "@GENE_TPO", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Diiodotyrosine", "to": "@CHEMICAL_Thyroxine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Diiodotyrosine", "to": "@CHEMICAL_3_iodotyrosine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Triiodothyronine", "to": "@GENE_TPO", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Levodopa", "to": "@CHEMICAL_dopaquinone", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Levodopa", "to": "@GENE_DDC", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Levodopa", "to": "@GENE_TH", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Levodopa", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Levodopa", "to": "ko:K00422", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Levodopa", "to": "@GENE_TYR", "width": 1}, {"color": "green", "from": "@CHEMICAL_Levodopa", "title": "PMIDs: [\u00272188121\u0027]", "to": "@CHEMICAL_Tyrosine", "width": 2}, {"color": "grey", "from": "@CHEMICAL_dopaquinone", "to": "ko:K00422", "width": 1}, {"color": "grey", "from": "@CHEMICAL_2_5_dihydroxybenzaldehyde", "to": "@GENE_AOX1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_2_5_dihydroxybenzaldehyde", "to": "@CHEMICAL_2_5_dihydroxybenzoic_acid", "width": 1}, {"color": "grey", "from": "@GENE_AOX1", "to": "@CHEMICAL_2_5_dihydroxybenzoic_acid", "width": 1}, {"color": "grey", "from": "@GENE_TPO", "to": "@CHEMICAL_3_iodotyrosine", "width": 1}, {"color": "grey", "from": "@GENE_TPO", "to": "@CHEMICAL_Thyroxine", "width": 1}, {"color": "grey", "from": "@GENE_TPO", "to": "@CHEMICAL_Tyrosine", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_4_hydroxyphenylacetate", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_dopegal", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "width": 1}, {"color": "grey", "from": "@GENE_ALDH3A1", "to": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "@CHEMICAL_4_hydroxyphenylacetate", "to": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_Methoxyhydroxyphenylglycol", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_Normetanephrine", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_Norepinephrine", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_3_methoxytyramine", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "width": 1}, {"color": "grey", "from": "@GENE_COMT", "to": "@CHEMICAL_Epinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "to": "@CHEMICAL_dopegal", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "to": "@GENE_ADH7", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Dihydroxyphenylethyleneglycol", "to": "@CHEMICAL_Methoxyhydroxyphenylglycol", "width": 1}, {"color": "grey", "from": "@CHEMICAL_dopegal", "to": "@GENE_MAOA", "width": 1}, {"color": "grey", "from": "@CHEMICAL_dopegal", "to": "@CHEMICAL_Norepinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_dopegal", "to": "@CHEMICAL_Epinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_dopegal", "to": "@GENE_ADH7", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Normetanephrine", "to": "@GENE_MAOA", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Normetanephrine", "to": "@CHEMICAL_Norepinephrine", "width": 1}, {"color": "green", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002736717\u0027]", "to": "@CHEMICAL_Tyramine", "width": 2}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@GENE_TYR", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyrosine", "to": "ko:K00817", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyrosine", "to": "@GENE_IL4I1", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Tyrosine", "to": "@GENE_TH", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_3_iodotyrosine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyrosine", "to": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyrosine", "to": "ko:K22329", "width": 1}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002711327815\u0027]", "to": "@GENE_GSTZ1", "width": 2}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002736295804\u0027, \u002710518553\u0027, \u002736980965\u0027]", "to": "@GENE_FAH", "width": 2}, {"color": "red", "from": "@CHEMICAL_Tyrosine", "title": "PMIDs: [\u002718724531\u0027, \u002735611280\u0027, \u002719765774\u0027, \u002730737480\u0027, \u002710518553\u0027, \u002736985595\u0027, \u002723105706\u0027, \u002735685462\u0027, \u002735822095\u0027, \u002711001939\u0027, \u002736465977\u0027, \u002721813063\u0027, \u002725681086\u0027, \u002725733348\u0027, \u002732202644\u0027, \u002732158253\u0027, \u002736376482\u0027, \u002712872815\u0027]", "to": "@GENE_HGD", "width": 2}, {"color": "grey", "from": "@CHEMICAL_Tyramine", "to": "ko:K22329", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyramine", "to": "ko:K25272", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Tyramine", "to": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "@GENE_TYR", "to": "@CHEMICAL_Indole_5_6_quinone", "width": 1}, {"color": "grey", "from": "@GENE_TYR", "to": "@CHEMICAL_5_6_dihydroxyindole", "width": 1}, {"color": "blue", "from": "@CHEMICAL_fumarylacetoacetate", "to": "@GENE_FAH", "width": 1}, {"color": "grey", "from": "@CHEMICAL_fumarylacetoacetate", "to": "@CHEMICAL_acetoacetic_acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_fumarylacetoacetate", "to": "@CHEMICAL_4_Maleylacetoacetate", "width": 1}, {"color": "green", "from": "@CHEMICAL_fumarylacetoacetate", "title": "PMIDs: [\u002711327815\u0027]", "to": "@GENE_GSTZ1", "width": 2}, {"color": "grey", "from": "@CHEMICAL_fumarylacetoacetate", "to": "@CHEMICAL_Fumarates", "width": 1}, {"color": "grey", "from": "@GENE_FAH", "to": "@CHEMICAL_acetoacetic_acid", "width": 1}, {"color": "grey", "from": "@GENE_FAH", "to": "@CHEMICAL_Fumarates", "width": 1}, {"color": "grey", "from": "@GENE_MAOA", "to": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "width": 1}, {"color": "grey", "from": "@GENE_MAOA", "to": "@CHEMICAL_3_methoxytyramine", "width": 1}, {"color": "grey", "from": "@GENE_MAOA", "to": "@CHEMICAL_Epinephrine", "width": 1}, {"color": "grey", "from": "@GENE_MAOA", "to": "@CHEMICAL_Norepinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "to": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "width": 1}, {"color": "grey", "from": "@CHEMICAL_(4_hydroxy_3_methoxyphenyl)acetaldehyde", "to": "@CHEMICAL_3_methoxytyramine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_4_hydroxyphenylacetaldehyde", "to": "ko:K25272", "width": 1}, {"color": "grey", "from": "@CHEMICAL_5_6_dihydroxyindole", "to": "@CHEMICAL_Indole_5_6_quinone", "width": 1}, {"color": "grey", "from": "@CHEMICAL_5_6_dihydroxyindole", "to": "@GENE_DCT", "width": 1}, {"color": "grey", "from": "@CHEMICAL_5_6_dihydroxyindole", "to": "@CHEMICAL_dopachrome", "width": 1}, {"color": "grey", "from": "@CHEMICAL_5_6_dihydroxyindole", "to": "@GENE_TYRP1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_5_6_dihydroxyindole", "to": "@CHEMICAL_5_6_dihydroxy_2_indolylcarboxylic_acid", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "to": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Dihydroxyphenylacetic_Acid", "to": "@CHEMICAL_phorbol_12_phenylacetate_13_acetate_20_homovanillate", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Epinephrine", "to": "@GENE_PNMT", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Epinephrine", "to": "@CHEMICAL_Norepinephrine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "to": "@GENE_IL4I1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "to": "@GENE_MIF", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "to": "@CHEMICAL_2_Hydroxy_3_4_hydroxyphenyl_propenoate", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_Hydroxyphenyl_pyruvate", "to": "ko:K00817", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Norepinephrine", "to": "@GENE_PNMT", "width": 1}, {"color": "blue", "from": "@CHEMICAL_Norepinephrine", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Norepinephrine", "to": "@GENE_DBH", "width": 1}, {"color": "grey", "from": "@GENE_MIF", "to": "@CHEMICAL_2_Hydroxy_3_4_hydroxyphenyl_propenoate", "width": 1}, {"color": "blue", "from": "@CHEMICAL_3_methoxytyramine", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "ko:K25272", "to": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "width": 1}, {"color": "grey", "from": "ko:K25272", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_3_4_dihydroxyphenylacetaldehyde", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@GENE_DDC", "to": "@CHEMICAL_Dopamine", "width": 1}, {"color": "grey", "from": "@CHEMICAL_Dopamine", "to": "@GENE_DBH", "width": 1}, {"color": "grey", "from": "@CHEMICAL_4_Maleylacetoacetate", "to": "@GENE_GSTZ1", "width": 1}, {"color": "grey", "from": "@CHEMICAL_4_Maleylacetoacetate", "to": "@GENE_HGD", "width": 1}, {"color": "grey", "from": "@GENE_TYRP1", "to": "@CHEMICAL_5_6_dihydroxy_2_indolylcarboxylic_acid", "width": 1}, {"color": "grey", "from": "@GENE_DCT", "to": "@CHEMICAL_dopachrome", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

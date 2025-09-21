@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1960px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ad494a", "id": "@GENE_FAH", "label": "@GENE_FAH", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#393b79", "id": "@CHEMICAL_Tyrosine", "label": "@CHEMICAL_Tyrosine", "shape": "dot", "size": 10, "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_GSTZ1", "label": "@GENE_GSTZ1", "shape": "dot", "size": 10, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_HGD", "label": "@GENE_HGD", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_HPD", "label": "@GENE_HPD", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#b5cf6b", "id": "@DISEASE_Metabolism_Inborn_Errors", "label": "@DISEASE_Metabolism_Inborn_Errors", "shape": "dot", "size": 10, "type": "disease"}, {"color": "#393b79", "id": "@CHEMICAL_Melanins", "label": "@CHEMICAL_Melanins", "shape": "dot", "size": 10, "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_GAA", "label": "@GENE_GAA", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#b5cf6b", "id": "@DISEASE_Glycogen_Storage_Disease_Type_II", "label": "@DISEASE_Glycogen_Storage_Disease_Type_II", "shape": "dot", "size": 10, "type": "disease"}, {"color": "#ad494a", "id": "@GENE_SI", "label": "@GENE_SI", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#b5cf6b", "id": "@DISEASE_Alkaptonuria", "label": "@DISEASE_Alkaptonuria", "shape": "dot", "size": 30, "type": "disease"}, {"color": "#393b79", "id": "@CHEMICAL_Homogentisic_Acid", "label": "@CHEMICAL_Homogentisic_Acid", "shape": "dot", "size": 10, "type": "chemical"}, {"color": "#b5cf6b", "id": "@DISEASE_Tyrosinemias", "label": "@DISEASE_Tyrosinemias", "shape": "dot", "size": 10, "type": "disease"}, {"color": "#393b79", "id": "@CHEMICAL_nitisinone", "label": "@CHEMICAL_nitisinone", "shape": "dot", "size": 10, "type": "chemical"}, {"color": "#ad494a", "id": "@GENE_MC2R", "label": "@GENE_MC2R", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_POMC", "label": "@GENE_POMC", "shape": "dot", "size": 10, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_PAH", "label": "@GENE_PAH", "shape": "dot", "size": 15, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_TYR", "label": "@GENE_TYR", "shape": "dot", "size": 10, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_PTCH1", "label": "@GENE_PTCH1", "shape": "dot", "size": 10, "type": "gene"}, {"color": "#ad494a", "id": "@GENE_SMO", "label": "@GENE_SMO", "shape": "dot", "size": 15, "type": "gene"}]);
+                  edges = new vis.DataSet([{"color": "rgba(27,158,119)", "confident": 0.9228, "from": "@GENE_FAH", "pmid_count": 7, "pmidlist": ["33365210", "10518553", "38974614", "36980965", "38256395", "33670179"], "relation": "Association", "score": 0.998046875, "title": "PMIDs: [\u002733365210\u0027, \u002710518553\u0027, \u002738974614\u0027, \u002736980965\u0027, \u002738256395\u0027, \u002733670179\u0027]", "to": "@CHEMICAL_Tyrosine", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.9991, "from": "@CHEMICAL_Tyrosine", "pmid_count": 2, "pmidlist": ["11327815", "35562974"], "relation": "Association", "score": 0.75, "title": "PMIDs: [\u002711327815\u0027, \u002735562974\u0027]", "to": "@GENE_GSTZ1", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.9336333333333333, "from": "@CHEMICAL_Tyrosine", "pmid_count": 19, "pmidlist": ["36985595", "35822095", "35611280", "12872815", "19765774", "36376482", "35685462", "23105706", "11001939", "30737480", "21813063", "25681086", "32202644", "35562974", "10518553", "18724531"], "relation": "Association", "score": 0.9999999403953552, "title": "PMIDs: [\u002736985595\u0027, \u002735822095\u0027, \u002735611280\u0027, \u002712872815\u0027, \u002719765774\u0027, \u002736376482\u0027, \u002735685462\u0027, \u002723105706\u0027, \u002711001939\u0027, \u002730737480\u0027, \u002721813063\u0027, \u002725681086\u0027, \u002732202644\u0027, \u002735562974\u0027, \u002710518553\u0027, \u002718724531\u0027]", "to": "@GENE_HGD", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9955428571428572, "from": "@CHEMICAL_Tyrosine", "pmid_count": 9, "pmidlist": ["26947423", "40491422", "30684868", "16197918", "25182962", "31578365"], "relation": "Association; Negative_Correlation", "score": 0.9669234375, "title": "PMIDs: [\u002726947423\u0027, \u002740491422\u0027, \u002730684868\u0027, \u002716197918\u0027, \u002725182962\u0027, \u002731578365\u0027]", "to": "@GENE_HPD", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.98735, "from": "@CHEMICAL_Tyrosine", "pmid_count": 2, "pmidlist": ["21620748", "35444851"], "relation": "Association", "score": 0.75, "title": "PMIDs: [\u002721620748\u0027, \u002735444851\u0027]", "to": "@DISEASE_Metabolism_Inborn_Errors", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9377, "from": "@CHEMICAL_Tyrosine", "pmid_count": 3, "pmidlist": ["31578365", "36999718", "9734339"], "relation": "Association; Positive_Correlation", "score": 0.8695999999999999, "title": "PMIDs: [\u002731578365\u0027, \u002736999718\u0027, \u00279734339\u0027]", "to": "@CHEMICAL_Melanins", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.81185, "from": "@GENE_GAA", "pmid_count": 10, "pmidlist": ["23632174", "39846949", "35071497", "34356580", "36237614", "37106898", "34405923", "33977033", "34922579", "14972326"], "relation": "Association; Negative_Correlation; Negative_Correlation; Positive_Correlation", "score": 0.8649404296875, "title": "PMIDs: [\u002723632174\u0027, \u002739846949\u0027, \u002735071497\u0027, \u002734356580\u0027, \u002736237614\u0027, \u002737106898\u0027, \u002734405923\u0027, \u002733977033\u0027, \u002734922579\u0027, \u002714972326\u0027]", "to": "@DISEASE_Glycogen_Storage_Disease_Type_II", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9747, "from": "@DISEASE_Glycogen_Storage_Disease_Type_II", "pmid_count": 3, "pmidlist": ["23632174", "35917590"], "relation": "Negative_Correlation; Association", "score": 0.74705, "title": "PMIDs: [\u002723632174\u0027, \u002735917590\u0027]", "to": "@GENE_SI", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.8071704545454549, "from": "@GENE_HGD", "pmid_count": 146, "pmidlist": ["15529343", "23632174", "22105303", "12501223", "10465119", "25153563", "34799606", "28271171", "10876237", "33728247", "36376482", "24783127", "16736091", "40092270", "23430897", "22606059", "20207456", "8782815", "1813514", "10340975", "39737503", "37395296", "23105706", "36874893", "16311673", "10482952", "11001939", "10970188", "37354891", "9529363", "9244427", "10094559", "15931605", "21874298", "15067820", "32212000", "35090868", "28643719", "32395411", "10205262", "22542924", "23105912", "19300282", "10819641", "24876668", "35611280", "9069115", "29353057", "31989660", "40938761", "27454006", "34381863", "7821069", "21822197", "36327861", "30406834", "24575791", "10884219", "40243989", "24191883", "32202644", "25762405", "3180550", "25184921", "39925566", "36295892", "19096913", "35822095", "40784658", "32050984", "12872815", "12359141", "36555443", "39842076", "20694448", "39957927", "12114497", "19765774", "26221390", "9154114", "34686677", "35685462", "28690378", "35110678", "27865997", "16085442", "32823072", "34235214", "32107984", "37658095", "34344451", "34504318", "25804398", "19862842", "24618234", "36985595", "15365968", "27298997", "31503358", "31600782", "33538294", "28158906", "10985185", "22196391", "19306858", "20601653", "35550814", "33469937", "10494297", "8188241", "3375493", "12872836", "10594001", "9674916", "20462779", "30737480", "36118553", "21813063", "23353776", "25681086", "28869836", "21308630", "18945288", "39273071", "8188247", "10518553", "21437689", "33621656", "26960557", "25233259"], "relation": "Negative_Correlation; Association; Positive_Correlation; Association; Positive_Correlation", "score": 0.6573702519379845, "title": "PMIDs: [\u002715529343\u0027, \u002723632174\u0027, \u002722105303\u0027, \u002712501223\u0027, \u002710465119\u0027, \u002725153563\u0027, \u002734799606\u0027, \u002728271171\u0027, \u002710876237\u0027, \u002733728247\u0027, \u002736376482\u0027, \u002724783127\u0027, \u002716736091\u0027, \u002740092270\u0027, \u002723430897\u0027, \u002722606059\u0027, \u002720207456\u0027, \u00278782815\u0027, \u00271813514\u0027, \u002710340975\u0027, \u002739737503\u0027, \u002737395296\u0027, \u002723105706\u0027, \u002736874893\u0027, \u002716311673\u0027, \u002710482952\u0027, \u002711001939\u0027, \u002710970188\u0027, \u002737354891\u0027, \u00279529363\u0027, \u00279244427\u0027, \u002710094559\u0027, \u002715931605\u0027, \u002721874298\u0027, \u002715067820\u0027, \u002732212000\u0027, \u002735090868\u0027, \u002728643719\u0027, \u002732395411\u0027, \u002710205262\u0027, \u002722542924\u0027, \u002723105912\u0027, \u002719300282\u0027, \u002710819641\u0027, \u002724876668\u0027, \u002735611280\u0027, \u00279069115\u0027, \u002729353057\u0027, \u002731989660\u0027, \u002740938761\u0027, \u002727454006\u0027, \u002734381863\u0027, \u00277821069\u0027, \u002721822197\u0027, \u002736327861\u0027, \u002730406834\u0027, \u002724575791\u0027, \u002710884219\u0027, \u002740243989\u0027, \u002724191883\u0027, \u002732202644\u0027, \u002725762405\u0027, \u00273180550\u0027, \u002725184921\u0027, \u002739925566\u0027, \u002736295892\u0027, \u002719096913\u0027, \u002735822095\u0027, \u002740784658\u0027, \u002732050984\u0027, \u002712872815\u0027, \u002712359141\u0027, \u002736555443\u0027, \u002739842076\u0027, \u002720694448\u0027, \u002739957927\u0027, \u002712114497\u0027, \u002719765774\u0027, \u002726221390\u0027, \u00279154114\u0027, \u002734686677\u0027, \u002735685462\u0027, \u002728690378\u0027, \u002735110678\u0027, \u002727865997\u0027, \u002716085442\u0027, \u002732823072\u0027, \u002734235214\u0027, \u002732107984\u0027, \u002737658095\u0027, \u002734344451\u0027, \u002734504318\u0027, \u002725804398\u0027, \u002719862842\u0027, \u002724618234\u0027, \u002736985595\u0027, \u002715365968\u0027, \u002727298997\u0027, \u002731503358\u0027, \u002731600782\u0027, \u002733538294\u0027, \u002728158906\u0027, \u002710985185\u0027, \u002722196391\u0027, \u002719306858\u0027, \u002720601653\u0027, \u002735550814\u0027, \u002733469937\u0027, \u002710494297\u0027, \u00278188241\u0027, \u00273375493\u0027, \u002712872836\u0027, \u002710594001\u0027, \u00279674916\u0027, \u002720462779\u0027, \u002730737480\u0027, \u002736118553\u0027, \u002721813063\u0027, \u002723353776\u0027, \u002725681086\u0027, \u002728869836\u0027, \u002721308630\u0027, \u002718945288\u0027, \u002739273071\u0027, \u00278188247\u0027, \u002710518553\u0027, \u002721437689\u0027, \u002733621656\u0027, \u002726960557\u0027, \u002725233259\u0027]", "to": "@DISEASE_Alkaptonuria", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.8881666666666665, "from": "@GENE_HGD", "pmid_count": 40, "pmidlist": ["15365968", "35611280", "31503358", "12359141", "25153563", "34799606", "36555443", "31600782", "28271171", "40938761", "36376482", "35659777", "23430897", "22850426", "9214216", "20207456", "35550814", "39737503", "10494297", "23858455", "27865997", "32823072", "37658095", "30737480", "36118553", "28869836", "30406834", "32395411", "18945288", "23105912", "32202644", "25762405"], "relation": "Association; Negative_Correlation; Positive_Correlation", "score": 0.8771549999999431, "title": "PMIDs: [\u002715365968\u0027, \u002735611280\u0027, \u002731503358\u0027, \u002712359141\u0027, \u002725153563\u0027, \u002734799606\u0027, \u002736555443\u0027, \u002731600782\u0027, \u002728271171\u0027, \u002740938761\u0027, \u002736376482\u0027, \u002735659777\u0027, \u002723430897\u0027, \u002722850426\u0027, \u00279214216\u0027, \u002720207456\u0027, \u002735550814\u0027, \u002739737503\u0027, \u002710494297\u0027, \u002723858455\u0027, \u002727865997\u0027, \u002732823072\u0027, \u002737658095\u0027, \u002730737480\u0027, \u002736118553\u0027, \u002728869836\u0027, \u002730406834\u0027, \u002732395411\u0027, \u002718945288\u0027, \u002723105912\u0027, \u002732202644\u0027, \u002725762405\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.996, "from": "@GENE_HGD", "pmid_count": 2, "pmidlist": ["10518553", "31503358"], "relation": "Association", "score": 0.75, "title": "PMIDs: [\u002710518553\u0027, \u002731503358\u0027]", "to": "@DISEASE_Tyrosinemias", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9989, "from": "@GENE_HGD", "pmid_count": 2, "pmidlist": ["28690378", "35685462"], "relation": "Negative_Correlation; Association", "score": 0.6938500000000001, "title": "PMIDs: [\u002728690378\u0027, \u002735685462\u0027]", "to": "@CHEMICAL_nitisinone", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.7861375, "from": "@DISEASE_Alkaptonuria", "pmid_count": 8, "pmidlist": ["36985595", "26947423", "34485014", "40243989", "25182962"], "relation": "Association", "score": 0.998046875, "title": "PMIDs: [\u002736985595\u0027, \u002726947423\u0027, \u002734485014\u0027, \u002740243989\u0027, \u002725182962\u0027]", "to": "@GENE_HPD", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.9927666666666667, "from": "@GENE_HPD", "pmid_count": 4, "pmidlist": ["16197918", "31578365", "34404820", "25182962"], "relation": "Association", "score": 0.9375, "title": "PMIDs: [\u002716197918\u0027, \u002731578365\u0027, \u002734404820\u0027, \u002725182962\u0027]", "to": "@CHEMICAL_Homogentisic_Acid", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.99965, "from": "@GENE_HPD", "pmid_count": 2, "pmidlist": ["30684868", "25182962"], "relation": "Association", "score": 0.75, "title": "PMIDs: [\u002730684868\u0027, \u002725182962\u0027]", "to": "@DISEASE_Tyrosinemias", "width": 2}, {"color": "rgba(166,118,29)", "confident": 0.9976692307692308, "from": "@GENE_HPD", "pmid_count": 14, "pmidlist": ["26947423", "24952314", "34485014", "40243989", "25628464", "39121793", "36980965", "31578365", "15931605"], "relation": "Negative_Correlation", "score": 0.9999847412109375, "title": "PMIDs: [\u002726947423\u0027, \u002724952314\u0027, \u002734485014\u0027, \u002740243989\u0027, \u002725628464\u0027, \u002739121793\u0027, \u002736980965\u0027, \u002731578365\u0027, \u002715931605\u0027]", "to": "@CHEMICAL_nitisinone", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.84975, "from": "@GENE_MC2R", "pmid_count": 2, "pmidlist": ["36421695", "37314044"], "relation": "Association", "score": 0.75, "title": "PMIDs: [\u002736421695\u0027, \u002737314044\u0027]", "to": "@GENE_POMC", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9857, "from": "@GENE_PAH", "pmid_count": 2, "pmidlist": ["39670100", "33514801"], "relation": "Association; Association", "score": 0.8685499999999999, "title": "PMIDs: [\u002739670100\u0027, \u002733514801\u0027]", "to": "@DISEASE_Metabolism_Inborn_Errors", "width": 2}, {"color": "rgba(27,158,119)", "confident": 0.9647, "from": "@CHEMICAL_Melanins", "pmid_count": 5, "pmidlist": ["27142149", "38894729", "33450959"], "relation": "Association", "score": 0.96875, "title": "PMIDs: [\u002727142149\u0027, \u002738894729\u0027, \u002733450959\u0027]", "to": "@GENE_TYR", "width": 2}, {"color": "rgba(102,166,30)", "confident": 0.9446, "from": "@GENE_PTCH1", "pmid_count": 2, "pmidlist": ["34562255", "35483421"], "relation": "Association; Negative_Correlation", "score": 0.7483, "title": "PMIDs: [\u002734562255\u0027, \u002735483421\u0027]", "to": "@GENE_SMO", "width": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 120,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
