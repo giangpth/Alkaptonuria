@@ -23,19 +23,42 @@ def session():
     s.headers.update({"User-Agent": "PubTatorPMIDFetcher/2.0"})
     return s
 
-def esearch_all_pmids(query: str, chunk: int = 10000) -> List[str]:
+filterParams = {"db":"pubmed",
+                "term":"",
+                "datetype":"pdat",
+                "mindate":"2020/01/01",
+                "maxdate":"2025/12/31",
+                "retmode":"json",
+                "retmax":0}
+
+def esearch_all_pmids(query: str, filterParams=filterParams) -> List[str]:
     """Collect all PMIDs for a PubMed query via esearch."""
     pmids: List[str] = []
     with session() as s:
         # first get count
         params = {"db":"pubmed","retmode":"json","term":query,"retmax":0}
-        r = s.get(EUTILS, params=params, timeout=60); r.raise_for_status()
+        r = s.get(EUTILS, params=params, timeout=60) 
         count = int(r.json()["esearchresult"]["count"])
-        for start in range(0, count, chunk):
-            params = {"db":"pubmed","retmode":"json","term":query,"retmax":chunk,"retstart":start}
-            r = s.get(EUTILS, params=params, timeout=60); r.raise_for_status()
+        print(f"There are: {count} documents for keyword {query}")
+        if count <= 5000:
+            params = {"db":"pubmed","retmode":"json","term":query,"retmax":10000}
+            r = s.get(EUTILS, params=params, timeout=60)
             pmids.extend(r.json()["esearchresult"].get("idlist", []))
             time.sleep(0.34)
+        else:
+            filterParams = {"db":"pubmed",
+                "term":query,
+                "datetype":"pdat",
+                "mindate":"2020/01/01",
+                "maxdate":"2025/12/31",
+                "retmode":"json",
+                "retmax":5000}
+            filres = s.get(EUTILS, params=filterParams, timeout=60)
+            count5years = int(filres.json()["esearchresult"]["count"])
+            print(f"There are: {count5years} documents for keyword {query} in the last 5 years")
+            pmids.extend(filres.json()["esearchresult"].get("idlist", []))
+            time.sleep(0.34)
+            
     # unique & numeric sort
     return sorted(set(pmids), key=lambda x: int(x))
 
@@ -56,6 +79,8 @@ def pubtator_has_concept(pmids: List[str], concepts: List[str], page: int = 1000
                     keep.add(doc.get("id"))
             time.sleep(0.5)
     return keep
+
+
 
 def main():
     ap = argparse.ArgumentParser()
