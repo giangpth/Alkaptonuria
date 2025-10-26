@@ -100,7 +100,7 @@
                   // adding nodes and edges to the graph
                   data = {nodes: nodes, edges: edges};
 
-                  var options = {"physics": {"enabled": true, "stabilization": {"enabled": true, "iterations": 200, "fit": true}, "barnesHut": {"gravitationalConstant": -30000, "springLength": 120, "springConstant": 0.02}}, "nodes": {"shape": "dot", "scaling": {"min": 10, "max": 30}, "font": {"size": 18}}, "edges": {"smooth": false}};
+                  var options = {"nodes": {"font": {"size": 20}, "scaling": {"min": 10, "max": 30}}, "edges": {"smooth": true}, "physics": {"enabled": true, "stabilization": {"enabled": true, "iterations": 500, "fit": true}}};
 
                   
 

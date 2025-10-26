@@ -1,0 +1,258 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1960px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 1960px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ad494a", "community": 1, "id": "@GENE_ACL", "label": "@GENE_ACL", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GDH1", "label": "@GENE_GDH1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MDH2", "label": "@GENE_MDH2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ALDH4A1", "label": "@GENE_ALDH4A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ACSS2", "label": "@GENE_ACSS2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PDHA2", "label": "@GENE_PDHA2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_G6PD", "label": "@GENE_G6PD", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_TKT", "label": "@GENE_TKT", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ACTG1", "label": "@GENE_ACTG1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CCT4", "label": "@GENE_CCT4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MYL12B", "label": "@GENE_MYL12B", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MYH14", "label": "@GENE_MYH14", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_DNAJB11", "label": "@GENE_DNAJB11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ADCY2", "label": "@GENE_ADCY2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_NUDT2", "label": "@GENE_NUDT2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ENTPD8", "label": "@GENE_ENTPD8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GUCY2C", "label": "@GENE_GUCY2C", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_NPR1", "label": "@GENE_NPR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_AGPAT2", "label": "@GENE_AGPAT2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CDS1", "label": "@GENE_CDS1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CDS2", "label": "@GENE_CDS2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PARA", "label": "@GENE_PARA", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_AKR1A1", "label": "@GENE_AKR1A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GUSB", "label": "@GENE_GUSB", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_HYAL1", "label": "@GENE_HYAL1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SPAM1", "label": "@GENE_SPAM1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PRODH", "label": "@GENE_PRODH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_POX2", "label": "@GENE_POX2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ANK", "label": "@GENE_ANK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CO", "label": "@GENE_CO", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_APX", "label": "@GENE_APX", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_H4C1", "label": "@GENE_H4C1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GTF2E1", "label": "@GENE_GTF2E1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_H2BC5", "label": "@GENE_H2BC5", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PAF1", "label": "@GENE_PAF1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_UBB", "label": "@GENE_UBB", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_XIP1", "label": "@GENE_XIP1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PARP", "label": "@GENE_PARP", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_XRCC6", "label": "@GENE_XRCC6", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MACROD1", "label": "@GENE_MACROD1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SUMO2", "label": "@GENE_SUMO2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_RPA2", "label": "@GENE_RPA2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MRE11", "label": "@GENE_MRE11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_NHEJ1", "label": "@GENE_NHEJ1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_RAD50", "label": "@GENE_RAD50", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PIN2", "label": "@GENE_PIN2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_EST2", "label": "@GENE_EST2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ASB1", "label": "@GENE_ASB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ELOB", "label": "@GENE_ELOB", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SQOR", "label": "@GENE_SQOR", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_COPS8", "label": "@GENE_COPS8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ICE1", "label": "@GENE_ICE1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CARD16", "label": "@GENE_CARD16", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_KLK8", "label": "@GENE_KLK8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CAV2", "label": "@GENE_CAV2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PRNP", "label": "@GENE_PRNP", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_HAO2", "label": "@GENE_HAO2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GOX1", "label": "@GENE_GOX1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SPS", "label": "@GENE_SPS", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GRHPR", "label": "@GENE_GRHPR", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MVD", "label": "@GENE_MVD", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_HOGA1", "label": "@GENE_HOGA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GGPS1", "label": "@GENE_GGPS1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_COX5A", "label": "@GENE_COX5A", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_COX6A1", "label": "@GENE_COX6A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_UQCRC2", "label": "@GENE_UQCRC2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_NDUFB8", "label": "@GENE_NDUFB8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_NDUFAB1", "label": "@GENE_NDUFAB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_CP", "label": "@GENE_CP", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_FECH", "label": "@GENE_FECH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PPO", "label": "@GENE_PPO", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_DHRS4", "label": "@GENE_DHRS4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_RETSAT", "label": "@GENE_RETSAT", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "community": 1, "id": "@GENE_BRE1", "label": "@GENE_BRE1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PPH", "label": "@GENE_PPH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PGLS", "label": "@GENE_PGLS", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_HK3", "label": "@GENE_HK3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PGM2", "label": "@GENE_PGM2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_HK1", "label": "@GENE_HK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_FBP1", "label": "@GENE_FBP1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_RR1", "label": "@GENE_RR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SI", "label": "@GENE_SI", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PGD", "label": "@GENE_PGD", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GABBR1", "label": "@GENE_GABBR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GABBR2", "label": "@GENE_GABBR2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_GABRA1", "label": "@GENE_GABRA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PMVK", "label": "@GENE_PMVK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_RBCK1", "label": "@GENE_RBCK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_TEF1", "label": "@GENE_TEF1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_UBR5", "label": "@GENE_UBR5", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_INTS11", "label": "@GENE_INTS11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_INTS9", "label": "@GENE_INTS9", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_INTS4", "label": "@GENE_INTS4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_IPMK", "label": "@GENE_IPMK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ITPK1", "label": "@GENE_ITPK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_IPK1", "label": "@GENE_IPK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_ISY1", "label": "@GENE_ISY1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SNRPA1", "label": "@GENE_SNRPA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SRRM3", "label": "@GENE_SRRM3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_KCNMA1", "label": "@GENE_KCNMA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SK2", "label": "@GENE_SK2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_LIPC", "label": "@GENE_LIPC", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PNLIP", "label": "@GENE_PNLIP", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_MR1", "label": "@GENE_MR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_TAPBPL", "label": "@GENE_TAPBPL", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SUMO3", "label": "@GENE_SUMO3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_PAPSS", "label": "@GENE_PAPSS", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SUOX", "label": "@GENE_SUOX", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_RAB43", "label": "@GENE_RAB43", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_TRS85", "label": "@GENE_TRS85", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SELENBP1", "label": "@GENE_SELENBP1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SLC3A1", "label": "@GENE_SLC3A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 1, "id": "@GENE_SLC7A9", "label": "@GENE_SLC7A9", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}]);
+                  edges = new vis.DataSet([{"color": "blue", "from": "@GENE_ACL", "to": "@GENE_GDH1", "width": 1}, {"color": "blue", "from": "@GENE_ACL", "to": "@GENE_MDH2", "width": 1}, {"color": "blue", "from": "@GENE_GDH1", "to": "@GENE_ALDH4A1", "width": 1}, {"color": "blue", "from": "@GENE_GDH1", "to": "@GENE_MDH2", "width": 1}, {"color": "blue", "from": "@GENE_ACSS2", "to": "@GENE_PDHA2", "width": 1}, {"color": "blue", "from": "@GENE_PDHA2", "to": "@GENE_G6PD", "width": 1}, {"color": "blue", "from": "@GENE_PDHA2", "to": "@GENE_TKT", "width": 1}, {"color": "blue", "from": "@GENE_ACTG1", "to": "@GENE_CCT4", "width": 1}, {"color": "blue", "from": "@GENE_ACTG1", "to": "@GENE_MYL12B", "width": 1}, {"color": "blue", "from": "@GENE_ACTG1", "to": "@GENE_MYH14", "width": 1}, {"color": "blue", "from": "@GENE_CCT4", "to": "@GENE_DNAJB11", "width": 1}, {"color": "blue", "from": "@GENE_MYL12B", "to": "@GENE_MYH14", "width": 1}, {"color": "blue", "from": "@GENE_ADCY2", "to": "@GENE_NUDT2", "width": 1}, {"color": "blue", "from": "@GENE_NUDT2", "to": "@GENE_ENTPD8", "width": 1}, {"color": "blue", "from": "@GENE_NUDT2", "to": "@GENE_GUCY2C", "width": 1}, {"color": "blue", "from": "@GENE_NUDT2", "to": "@GENE_NPR1", "width": 1}, {"color": "blue", "from": "@GENE_AGPAT2", "to": "@GENE_CDS1", "width": 1}, {"color": "blue", "from": "@GENE_AGPAT2", "to": "@GENE_CDS2", "width": 1}, {"color": "blue", "from": "@GENE_CDS1", "to": "@GENE_PARA", "width": 1}, {"color": "blue", "from": "@GENE_CDS1", "to": "@GENE_CDS2", "width": 1}, {"color": "blue", "from": "@GENE_CDS2", "to": "@GENE_PARA", "width": 1}, {"color": "blue", "from": "@GENE_AKR1A1", "to": "@GENE_GUSB", "width": 1}, {"color": "blue", "from": "@GENE_GUSB", "to": "@GENE_HYAL1", "width": 1}, {"color": "blue", "from": "@GENE_GUSB", "to": "@GENE_SPAM1", "width": 1}, {"color": "blue", "from": "@GENE_ALDH4A1", "to": "@GENE_PRODH", "width": 1}, {"color": "blue", "from": "@GENE_ALDH4A1", "to": "@GENE_POX2", "width": 1}, {"color": "blue", "from": "@GENE_PRODH", "to": "@GENE_POX2", "width": 1}, {"color": "blue", "from": "@GENE_ANK", "to": "@GENE_CO", "width": 1}, {"color": "red", "from": "@GENE_ANK", "title": "PMIDs: {\u002739353309\u0027}", "to": "@GENE_NPR1", "width": 2}, {"color": "blue", "from": "@GENE_APX", "to": "@GENE_H4C1", "width": 1}, {"color": "blue", "from": "@GENE_H4C1", "to": "@GENE_GTF2E1", "width": 1}, {"color": "blue", "from": "@GENE_H4C1", "to": "@GENE_H2BC5", "width": 1}, {"color": "blue", "from": "@GENE_H4C1", "to": "@GENE_PAF1", "width": 1}, {"color": "blue", "from": "@GENE_H4C1", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_XIP1", "to": "@GENE_PARP", "width": 1}, {"color": "blue", "from": "@GENE_XIP1", "to": "@GENE_XRCC6", "width": 1}, {"color": "blue", "from": "@GENE_PARP", "to": "@GENE_MACROD1", "width": 1}, {"color": "blue", "from": "@GENE_PARP", "to": "@GENE_XRCC6", "width": 1}, {"color": "blue", "from": "@GENE_PARP", "to": "@GENE_SUMO2", "width": 1}, {"color": "blue", "from": "@GENE_PARP", "to": "@GENE_RPA2", "width": 1}, {"color": "blue", "from": "@GENE_XRCC6", "to": "@GENE_MRE11", "width": 1}, {"color": "blue", "from": "@GENE_XRCC6", "to": "@GENE_NHEJ1", "width": 1}, {"color": "blue", "from": "@GENE_XRCC6", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_XRCC6", "to": "@GENE_PIN2", "width": 1}, {"color": "blue", "from": "@GENE_XRCC6", "to": "@GENE_EST2", "width": 1}, {"color": "green", "from": "@GENE_ASB1", "title": "PMIDs: {\u002739733518\u0027}", "to": "@GENE_ELOB", "width": 2}, {"color": "red", "from": "@GENE_ASB1", "title": "PMIDs: {\u002739733518\u0027}", "to": "@GENE_SQOR", "width": 2}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_COPS8", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_PAF1", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_ICE1", "width": 1}, {"color": "blue", "from": "@GENE_CARD16", "to": "@GENE_KLK8", "width": 1}, {"color": "blue", "from": "@GENE_CAV2", "to": "@GENE_PRNP", "width": 1}, {"color": "blue", "from": "@GENE_PARA", "to": "@GENE_HAO2", "width": 1}, {"color": "blue", "from": "@GENE_PARA", "to": "@GENE_GOX1", "width": 1}, {"color": "blue", "from": "@GENE_PARA", "to": "@GENE_SPS", "width": 1}, {"color": "blue", "from": "@GENE_HAO2", "to": "@GENE_GRHPR", "width": 1}, {"color": "blue", "from": "@GENE_HAO2", "to": "@GENE_GOX1", "width": 1}, {"color": "blue", "from": "@GENE_HAO2", "to": "@GENE_MVD", "width": 1}, {"color": "blue", "from": "@GENE_HAO2", "to": "@GENE_HOGA1", "width": 1}, {"color": "blue", "from": "@GENE_GOX1", "to": "@GENE_GRHPR", "width": 1}, {"color": "blue", "from": "@GENE_GOX1", "to": "@GENE_MVD", "width": 1}, {"color": "blue", "from": "@GENE_GOX1", "to": "@GENE_HOGA1", "width": 1}, {"color": "blue", "from": "@GENE_SPS", "to": "@GENE_GGPS1", "width": 1}, {"color": "blue", "from": "@GENE_COX5A", "to": "@GENE_COX6A1", "width": 1}, {"color": "blue", "from": "@GENE_COX5A", "to": "@GENE_UQCRC2", "width": 1}, {"color": "blue", "from": "@GENE_COX5A", "to": "@GENE_NDUFB8", "width": 1}, {"color": "blue", "from": "@GENE_COX5A", "to": "@GENE_NDUFAB1", "width": 1}, {"color": "blue", "from": "@GENE_COX6A1", "to": "@GENE_UQCRC2", "width": 1}, {"color": "blue", "from": "@GENE_UQCRC2", "to": "@GENE_NDUFAB1", "width": 1}, {"color": "blue", "from": "@GENE_UQCRC2", "to": "@GENE_NDUFB8", "width": 1}, {"color": "blue", "from": "@GENE_NDUFB8", "to": "@GENE_NDUFAB1", "width": 1}, {"color": "blue", "from": "@GENE_CP", "to": "@GENE_FECH", "width": 1}, {"color": "blue", "from": "@GENE_FECH", "to": "@GENE_PPO", "width": 1}, {"color": "grey", "from": "@GENE_DHRS4", "to": "@GENE_RETSAT", "width": 1}, {"color": "blue", "from": "@GENE_PAF1", "to": "@GENE_ICE1", "width": 1}, {"color": "blue", "from": "@GENE_PAF1", "to": "@GENE_BRE1", "width": 1}, {"color": "blue", "from": "@GENE_PPH", "to": "@GENE_G6PD", "width": 1}, {"color": "blue", "from": "@GENE_PPH", "to": "@GENE_TKT", "width": 1}, {"color": "blue", "from": "@GENE_G6PD", "to": "@GENE_PGLS", "width": 1}, {"color": "blue", "from": "@GENE_G6PD", "to": "@GENE_HK3", "width": 1}, {"color": "blue", "from": "@GENE_G6PD", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_G6PD", "to": "@GENE_HK1", "width": 1}, {"color": "blue", "from": "@GENE_TKT", "to": "@GENE_FBP1", "width": 1}, {"color": "blue", "from": "@GENE_TKT", "to": "@GENE_HK1", "width": 1}, {"color": "blue", "from": "@GENE_TKT", "to": "@GENE_HK3", "width": 1}, {"color": "blue", "from": "@GENE_TKT", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_ENTPD8", "to": "@GENE_RR1", "width": 1}, {"color": "blue", "from": "@GENE_FBP1", "to": "@GENE_HK3", "width": 1}, {"color": "blue", "from": "@GENE_FBP1", "to": "@GENE_HK1", "width": 1}, {"color": "blue", "from": "@GENE_HK3", "to": "@GENE_HK1", "width": 1}, {"color": "blue", "from": "@GENE_HK3", "to": "@GENE_SI", "width": 1}, {"color": "blue", "from": "@GENE_HK3", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_HK1", "to": "@GENE_SI", "width": 1}, {"color": "blue", "from": "@GENE_HK1", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_PGLS", "to": "@GENE_PGD", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_GABBR2", "width": 1}, {"color": "blue", "from": "@GENE_GABBR2", "to": "@GENE_GABRA1", "width": 1}, {"color": "blue", "from": "@GENE_GGPS1", "to": "@GENE_MVD", "width": 1}, {"color": "blue", "from": "@GENE_MVD", "to": "@GENE_PMVK", "width": 1}, {"color": "blue", "from": "@GENE_GRHPR", "to": "@GENE_HOGA1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_RBCK1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_TEF1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_UBR5", "width": 1}, {"color": "green", "from": "@GENE_INTS11", "title": "PMIDs: {\u002736180473\u0027}", "to": "@GENE_INTS9", "width": 2}, {"color": "green", "from": "@GENE_INTS11", "title": "PMIDs: {\u002736180473\u0027}", "to": "@GENE_INTS4", "width": 2}, {"color": "blue", "from": "@GENE_INTS9", "to": "@GENE_INTS4", "width": 1}, {"color": "blue", "from": "@GENE_IPMK", "to": "@GENE_ITPK1", "width": 1}, {"color": "blue", "from": "@GENE_IPMK", "to": "@GENE_IPK1", "width": 1}, {"color": "blue", "from": "@GENE_ITPK1", "to": "@GENE_IPK1", "width": 1}, {"color": "blue", "from": "@GENE_ISY1", "to": "@GENE_SNRPA1", "width": 1}, {"color": "blue", "from": "@GENE_SNRPA1", "to": "@GENE_SRRM3", "width": 1}, {"color": "blue", "from": "@GENE_KCNMA1", "to": "@GENE_SK2", "width": 1}, {"color": "blue", "from": "@GENE_LIPC", "to": "@GENE_PNLIP", "width": 1}, {"color": "blue", "from": "@GENE_MR1", "to": "@GENE_TAPBPL", "width": 1}, {"color": "blue", "from": "@GENE_MRE11", "to": "@GENE_SUMO2", "width": 1}, {"color": "green", "from": "@GENE_MRE11", "title": "PMIDs: {\u002740796731\u0027}", "to": "@GENE_RAD50", "width": 2}, {"color": "blue", "from": "@GENE_SUMO2", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_SUMO2", "to": "@GENE_SUMO3", "width": 1}, {"color": "red", "from": "@GENE_NPR1", "title": "PMIDs: {\u002740056739\u0027}", "to": "@GENE_SUMO3", "width": 2}, {"color": "blue", "from": "@GENE_PAPSS", "to": "@GENE_SUOX", "width": 1}, {"color": "blue", "from": "@GENE_RAB43", "to": "@GENE_TRS85", "width": 1}, {"color": "blue", "from": "@GENE_SELENBP1", "to": "@GENE_SQOR", "width": 1}, {"color": "blue", "from": "@GENE_SLC3A1", "to": "@GENE_SLC7A9", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
