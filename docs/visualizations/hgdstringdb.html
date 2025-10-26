@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1960px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ad494a", "community": 2, "id": "@GENE_AGMAT", "label": "@GENE_AGMAT", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_FAAH", "label": "@GENE_FAAH", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "community": 2, "id": "@GENE_AOC1", "label": "@GENE_AOC1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_AGPAT2", "label": "@GENE_AGPAT2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CDS1", "label": "@GENE_CDS1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CDS2", "label": "@GENE_CDS2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_AKAP5", "label": "@GENE_AKAP5", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ROBO3", "label": "@GENE_ROBO3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ELOB", "label": "@GENE_ELOB", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PSMB6", "label": "@GENE_PSMB6", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RNPS1", "label": "@GENE_RNPS1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RPS27A", "label": "@GENE_RPS27A", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_UBB", "label": "@GENE_UBB", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_AKR1A1", "label": "@GENE_AKR1A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GRHPR", "label": "@GENE_GRHPR", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_HAO2", "label": "@GENE_HAO2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_HAO1", "label": "@GENE_HAO1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_HOGA1", "label": "@GENE_HOGA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_AMBRA1", "label": "@GENE_AMBRA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ASB1", "label": "@GENE_ASB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_COPS8", "label": "@GENE_COPS8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SPSB4", "label": "@GENE_SPSB4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SPSB1", "label": "@GENE_SPSB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ICE1", "label": "@GENE_ICE1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_APEX1", "label": "@GENE_APEX1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RPA2", "label": "@GENE_RPA2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NADK", "label": "@GENE_NADK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_MR1", "label": "@GENE_MR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_MRE11", "label": "@GENE_MRE11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RAD50", "label": "@GENE_RAD50", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SUMO3", "label": "@GENE_SUMO3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SUMO2", "label": "@GENE_SUMO2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ARF5", "label": "@GENE_ARF5", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_USO1", "label": "@GENE_USO1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ARFIP2", "label": "@GENE_ARFIP2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SQOR", "label": "@GENE_SQOR", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ATXN1", "label": "@GENE_ATXN1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RBFOX2", "label": "@GENE_RBFOX2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RBM38", "label": "@GENE_RBM38", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_BBS2", "label": "@GENE_BBS2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CCT4", "label": "@GENE_CCT4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_DNAJB11", "label": "@GENE_DNAJB11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CARD16", "label": "@GENE_CARD16", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_KLK8", "label": "@GENE_KLK8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PDIA6", "label": "@GENE_PDIA6", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CHPF2", "label": "@GENE_CHPF2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CHSY1", "label": "@GENE_CHSY1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GSTK1", "label": "@GENE_GSTK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_LRP5", "label": "@GENE_LRP5", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NUDT7", "label": "@GENE_NUDT7", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RBCK1", "label": "@GENE_RBCK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_COX6A1", "label": "@GENE_COX6A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_CTBS", "label": "@GENE_CTBS", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SNRPA1", "label": "@GENE_SNRPA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ENTPD8", "label": "@GENE_ENTPD8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GUCY2C", "label": "@GENE_GUCY2C", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NPR1", "label": "@GENE_NPR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NT5C3B", "label": "@GENE_NT5C3B", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_FECH", "label": "@GENE_FECH", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PPOX", "label": "@GENE_PPOX", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GABBR1", "label": "@GENE_GABBR1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_KCNJ2", "label": "@GENE_KCNJ2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GABBR2", "label": "@GENE_GABBR2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GRM1", "label": "@GENE_GRM1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_TAS2R20", "label": "@GENE_TAS2R20", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_TAS2R39", "label": "@GENE_TAS2R39", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GABRA1", "label": "@GENE_GABRA1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GPR4", "label": "@GENE_GPR4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_GPR68", "label": "@GENE_GPR68", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_HK1", "label": "@GENE_HK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_HK3", "label": "@GENE_HK3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PGM2", "label": "@GENE_PGM2", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SRRM3", "label": "@GENE_SRRM3", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_INTS11", "label": "@GENE_INTS11", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_INTS9", "label": "@GENE_INTS9", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_INTS4", "label": "@GENE_INTS4", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_IPMK", "label": "@GENE_IPMK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_ITPK1", "label": "@GENE_ITPK1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_IPPK", "label": "@GENE_IPPK", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_LYZ", "label": "@GENE_LYZ", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_MFGE8", "label": "@GENE_MFGE8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_MDH2", "label": "@GENE_MDH2", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NDUFAB1", "label": "@GENE_NDUFAB1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_NDUFB8", "label": "@GENE_NDUFB8", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SLC25A25", "label": "@GENE_SLC25A25", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_TAPBPL", "label": "@GENE_TAPBPL", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SLC26A6", "label": "@GENE_SLC26A6", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_UBASH3B", "label": "@GENE_UBASH3B", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SLC15A1", "label": "@GENE_SLC15A1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PAFAH1B1", "label": "@GENE_PAFAH1B1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PLA2G12B", "label": "@GENE_PLA2G12B", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_RAB18", "label": "@GENE_RAB18", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PLA2G10", "label": "@GENE_PLA2G10", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "grey", "id": "@GENE_TMEM189", "label": "@GENE_TMEM189", "shape": "diamond", "size": 10, "title": "Type: Unknown"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PAG1", "label": "@GENE_PAG1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SLC9A3R1", "label": "@GENE_SLC9A3R1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_PAPSS1", "label": "@GENE_PAPSS1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SUOX", "label": "@GENE_SUOX", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}, {"color": "#ad494a", "community": 2, "id": "@GENE_SELENBP1", "label": "@GENE_SELENBP1", "shape": "dot", "size": 10, "title": "Type: gene", "type": "gene"}]);
+                  edges = new vis.DataSet([{"color": "grey", "from": "@GENE_AGMAT", "to": "@GENE_FAAH", "width": 1}, {"color": "blue", "from": "@GENE_AGMAT", "to": "@GENE_AOC1", "width": 1}, {"color": "blue", "from": "@GENE_AGPAT2", "to": "@GENE_CDS1", "width": 1}, {"color": "blue", "from": "@GENE_AGPAT2", "to": "@GENE_CDS2", "width": 1}, {"color": "blue", "from": "@GENE_CDS1", "to": "@GENE_CDS2", "width": 1}, {"color": "blue", "from": "@GENE_AKAP5", "to": "@GENE_ROBO3", "width": 1}, {"color": "blue", "from": "@GENE_ROBO3", "to": "@GENE_ELOB", "width": 1}, {"color": "blue", "from": "@GENE_ROBO3", "to": "@GENE_PSMB6", "width": 1}, {"color": "blue", "from": "@GENE_ROBO3", "to": "@GENE_RNPS1", "width": 1}, {"color": "blue", "from": "@GENE_ROBO3", "to": "@GENE_RPS27A", "width": 1}, {"color": "blue", "from": "@GENE_ROBO3", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_AKR1A1", "to": "@GENE_GRHPR", "width": 1}, {"color": "blue", "from": "@GENE_GRHPR", "to": "@GENE_HAO2", "width": 1}, {"color": "blue", "from": "@GENE_GRHPR", "to": "@GENE_HAO1", "width": 1}, {"color": "blue", "from": "@GENE_GRHPR", "to": "@GENE_HOGA1", "width": 1}, {"color": "blue", "from": "@GENE_AMBRA1", "to": "@GENE_ELOB", "width": 1}, {"color": "green", "from": "@GENE_ELOB", "title": "PMIDs: {\u002739733518\u0027}", "to": "@GENE_ASB1", "width": 2}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_COPS8", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_PSMB6", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_RPS27A", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_SPSB4", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_SPSB1", "width": 1}, {"color": "blue", "from": "@GENE_ELOB", "to": "@GENE_ICE1", "width": 1}, {"color": "blue", "from": "@GENE_APEX1", "to": "@GENE_RPA2", "width": 1}, {"color": "red", "from": "@GENE_APEX1", "title": "PMIDs: {\u002739725655\u0027}", "to": "@GENE_NADK", "width": 2}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_MR1", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_MRE11", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_RPS27A", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_SUMO3", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_SUMO2", "width": 1}, {"color": "blue", "from": "@GENE_RPA2", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_ARF5", "to": "@GENE_USO1", "width": 1}, {"color": "blue", "from": "@GENE_ARF5", "to": "@GENE_ARFIP2", "width": 1}, {"color": "red", "from": "@GENE_ASB1", "title": "PMIDs: {\u002739733518\u0027}", "to": "@GENE_SQOR", "width": 2}, {"color": "blue", "from": "@GENE_ATXN1", "to": "@GENE_RBFOX2", "width": 1}, {"color": "blue", "from": "@GENE_RBFOX2", "to": "@GENE_RBM38", "width": 1}, {"color": "blue", "from": "@GENE_BBS2", "to": "@GENE_CCT4", "width": 1}, {"color": "blue", "from": "@GENE_CCT4", "to": "@GENE_DNAJB11", "width": 1}, {"color": "blue", "from": "@GENE_CARD16", "to": "@GENE_KLK8", "width": 1}, {"color": "blue", "from": "@GENE_DNAJB11", "to": "@GENE_PDIA6", "width": 1}, {"color": "blue", "from": "@GENE_CHPF2", "to": "@GENE_CHSY1", "width": 1}, {"color": "blue", "from": "@GENE_COPS8", "to": "@GENE_RPS27A", "width": 1}, {"color": "blue", "from": "@GENE_COPS8", "to": "@GENE_HOGA1", "width": 1}, {"color": "blue", "from": "@GENE_COPS8", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_GSTK1", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_HAO1", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_HAO2", "width": 1}, {"color": "grey", "from": "@GENE_RPS27A", "to": "@GENE_LRP5", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_MRE11", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_NUDT7", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_PSMB6", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_RBCK1", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_SUMO3", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_SUMO2", "width": 1}, {"color": "blue", "from": "@GENE_RPS27A", "to": "@GENE_UBB", "width": 1}, {"color": "blue", "from": "@GENE_HOGA1", "to": "@GENE_HAO1", "width": 1}, {"color": "blue", "from": "@GENE_HOGA1", "to": "@GENE_HAO2", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_GSTK1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_HAO1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_HAO2", "width": 1}, {"color": "grey", "from": "@GENE_UBB", "to": "@GENE_LRP5", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_MRE11", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_NUDT7", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_PSMB6", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_RBCK1", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_SUMO2", "width": 1}, {"color": "blue", "from": "@GENE_UBB", "to": "@GENE_SUMO3", "width": 1}, {"color": "blue", "from": "@GENE_COX6A1", "to": "@GENE_CTBS", "width": 1}, {"color": "blue", "from": "@GENE_ICE1", "to": "@GENE_SNRPA1", "width": 1}, {"color": "blue", "from": "@GENE_ENTPD8", "to": "@GENE_GUCY2C", "width": 1}, {"color": "blue", "from": "@GENE_ENTPD8", "to": "@GENE_NPR1", "width": 1}, {"color": "blue", "from": "@GENE_ENTPD8", "to": "@GENE_NT5C3B", "width": 1}, {"color": "red", "from": "@GENE_NPR1", "title": "PMIDs: {\u002740056739\u0027}", "to": "@GENE_SUMO3", "width": 2}, {"color": "blue", "from": "@GENE_FECH", "to": "@GENE_PPOX", "width": 1}, {"color": "red", "from": "@GENE_FECH", "title": "PMIDs: {\u002740961234\u0027}", "to": "@GENE_RBM38", "width": 2}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_KCNJ2", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_GABBR2", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_GRM1", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_TAS2R20", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_TAS2R39", "width": 1}, {"color": "blue", "from": "@GENE_GABBR1", "to": "@GENE_GABRA1", "width": 1}, {"color": "blue", "from": "@GENE_KCNJ2", "to": "@GENE_GABBR2", "width": 1}, {"color": "blue", "from": "@GENE_GABBR2", "to": "@GENE_TAS2R39", "width": 1}, {"color": "blue", "from": "@GENE_GABBR2", "to": "@GENE_TAS2R20", "width": 1}, {"color": "blue", "from": "@GENE_GABBR2", "to": "@GENE_GRM1", "width": 1}, {"color": "blue", "from": "@GENE_GABBR2", "to": "@GENE_GABRA1", "width": 1}, {"color": "blue", "from": "@GENE_TAS2R20", "to": "@GENE_TAS2R39", "width": 1}, {"color": "blue", "from": "@GENE_GPR4", "to": "@GENE_GPR68", "width": 1}, {"color": "blue", "from": "@GENE_HAO2", "to": "@GENE_HAO1", "width": 1}, {"color": "blue", "from": "@GENE_HK1", "to": "@GENE_HK3", "width": 1}, {"color": "blue", "from": "@GENE_HK1", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_HK3", "to": "@GENE_PGM2", "width": 1}, {"color": "blue", "from": "@GENE_SNRPA1", "to": "@GENE_SRRM3", "width": 1}, {"color": "green", "from": "@GENE_INTS11", "title": "PMIDs: {\u002736180473\u0027}", "to": "@GENE_INTS9", "width": 2}, {"color": "green", "from": "@GENE_INTS11", "title": "PMIDs: {\u002736180473\u0027}", "to": "@GENE_INTS4", "width": 2}, {"color": "blue", "from": "@GENE_INTS9", "to": "@GENE_INTS4", "width": 1}, {"color": "blue", "from": "@GENE_IPMK", "to": "@GENE_ITPK1", "width": 1}, {"color": "blue", "from": "@GENE_IPMK", "to": "@GENE_IPPK", "width": 1}, {"color": "blue", "from": "@GENE_ITPK1", "to": "@GENE_IPPK", "width": 1}, {"color": "blue", "from": "@GENE_LYZ", "to": "@GENE_MFGE8", "width": 1}, {"color": "grey", "from": "@GENE_MDH2", "to": "@GENE_NDUFAB1", "width": 1}, {"color": "blue", "from": "@GENE_NDUFAB1", "to": "@GENE_NDUFB8", "width": 1}, {"color": "blue", "from": "@GENE_NDUFAB1", "to": "@GENE_SLC25A25", "width": 1}, {"color": "blue", "from": "@GENE_MR1", "to": "@GENE_TAPBPL", "width": 1}, {"color": "blue", "from": "@GENE_MRE11", "to": "@GENE_SLC26A6", "width": 1}, {"color": "blue", "from": "@GENE_MRE11", "to": "@GENE_SUMO2", "width": 1}, {"color": "green", "from": "@GENE_MRE11", "title": "PMIDs: {\u002740796731\u0027}", "to": "@GENE_RAD50", "width": 2}, {"color": "blue", "from": "@GENE_SUMO2", "to": "@GENE_RAD50", "width": 1}, {"color": "blue", "from": "@GENE_SUMO2", "to": "@GENE_SUMO3", "width": 1}, {"color": "blue", "from": "@GENE_NADK", "to": "@GENE_UBASH3B", "width": 1}, {"color": "blue", "from": "@GENE_NADK", "to": "@GENE_SLC15A1", "width": 1}, {"color": "blue", "from": "@GENE_NDUFB8", "to": "@GENE_SLC25A25", "width": 1}, {"color": "blue", "from": "@GENE_PAFAH1B1", "to": "@GENE_PLA2G12B", "width": 1}, {"color": "blue", "from": "@GENE_PAFAH1B1", "to": "@GENE_RAB18", "width": 1}, {"color": "blue", "from": "@GENE_PAFAH1B1", "to": "@GENE_PLA2G10", "width": 1}, {"color": "grey", "from": "@GENE_PLA2G12B", "to": "@GENE_TMEM189", "width": 1}, {"color": "grey", "from": "@GENE_PLA2G10", "to": "@GENE_TMEM189", "width": 1}, {"color": "blue", "from": "@GENE_PAG1", "to": "@GENE_SLC9A3R1", "width": 1}, {"color": "blue", "from": "@GENE_PAPSS1", "to": "@GENE_SUOX", "width": 1}, {"color": "blue", "from": "@GENE_SELENBP1", "to": "@GENE_SQOR", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.2,
+            "damping": 0.09,
+            "nodeDistance": 100,
+            "springConstant": 0.05,
+            "springLength": 200
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
