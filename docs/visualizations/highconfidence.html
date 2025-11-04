@@ -178,7 +178,7 @@
                   // adding nodes and edges to the graph
                   data = {nodes: nodes, edges: edges};
 
-                  var options = {"nodes": {"font": {"size": 20}, "scaling": {"min": 10, "max": 30}}, "edges": {"smooth": true}, "physics": {"enabled": true, "stabilization": {"enabled": true, "iterations": 500, "fit": true}}};
+                  var options = {"layout": {"randomSeed": 42, "improvedLayout": true}, "nodes": {"font": {"size": 20}, "scaling": {"min": 10, "max": 30}}, "edges": {"smooth": false}, "interaction": {"dragNodes": true, "zoomView": true, "dragView": true}, "physics": {"enabled": true, "solver": "forceAtlas2Based", "stabilization": {"enabled": true, "iterations": 300}}};
 
                   
 
@@ -195,7 +195,18 @@
 
 
                   
-                      network.on("stabilizationProgress", function(params) {
+                      
+    // Freeze after stabilization to prevent any further motion
+    network.once("stabilizationIterationsDone", function () {
+    network.setOptions({
+        physics: { enabled: false },                // no simulation
+        nodes:   { physics: false, fixed: { x:false, y:false } }, // not pinned; still static without physics
+        interaction: { dragNodes: true, dragView: true, zoomView: true },
+        edges: { smooth: false }
+    });
+    });
+    
+network.on("stabilizationProgress", function(params) {
                           document.getElementById('loadingBar').removeAttribute("style");
                           var maxWidth = 496;
                           var minWidth = 20;
@@ -218,6 +229,6 @@
               }
               drawGraph();
         </script>
-    <div style='position:absolute;top:10px;right:10px;background:white;padding:10px;border:1px solid #ccc;border-radius:5px;font-family:sans-serif;font-size:14px;z-index:9999;'><b>Legend</b><br><br><u>Entity Types:</u><br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#393b79;margin-right:6px;"></span> chemical<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#b5cf6b;margin-right:6px;"></span> disease<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#ad494a;margin-right:6px;"></span> gene<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#de9ed6;margin-right:6px;"></span> variant<br><br><u>Relation Types:</u><br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#1b9e77;margin-right:6px;"></span> Association<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#d95f02;margin-right:6px;"></span> Bind<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#7570b3;margin-right:6px;"></span> Cotreatment<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#66a61e;margin-right:6px;"></span> Drug_Interaction<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#e6ab02;margin-right:6px;"></span> Multitype<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#a6761d;margin-right:6px;"></span> Negative_Correlation<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#666666;margin-right:6px;"></span> Positive_Correlation<br></div>
+    <div style='position:absolute;top:10px;right:10px;background:white;padding:10px;border:1px solid #ccc;border-radius:5px;font-family:sans-serif;font-size:14px;z-index:9999;'><b>Legend</b><br><br><u>Entity Types:</u><br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#393b79;margin-right:6px;"></span> chemical<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#b5cf6b;margin-right:6px;"></span> disease<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#ad494a;margin-right:6px;"></span> gene<br><br><u>Relation Types:</u><br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#1b9e77;margin-right:6px;"></span> Association<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#d95f02;margin-right:6px;"></span> Bind<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#7570b3;margin-right:6px;"></span> Cotreatment<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#66a61e;margin-right:6px;"></span> Drug_Interaction<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#e6ab02;margin-right:6px;"></span> Multitype<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#a6761d;margin-right:6px;"></span> Negative_Correlation<br><span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#666666;margin-right:6px;"></span> Positive_Correlation<br></div>
 </body>
 </html>
